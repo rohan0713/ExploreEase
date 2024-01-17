@@ -23,7 +23,7 @@ fun AppNavigation(){
         }
 
         composable("home"){
-            HomeCompose()
+            DetailsCompose()
         }
     }
 }

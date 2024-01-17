@@ -1,0 +1,152 @@
+package com.travel.exploreease
+
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
+import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
+import androidx.compose.foundation.lazy.staggeredgrid.items
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Icon
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import kotlin.random.Random
+
+@OptIn(ExperimentalFoundationApi::class)
+@Preview
+@Composable
+fun DetailsCompose() {
+
+    val scrollState = rememberScrollState()
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color.White)
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+        ) {
+
+            Image(
+                painter = painterResource(id = R.drawable.ic_intro),
+                contentDescription = null,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(450.dp)
+                    .clip(RoundedCornerShape(bottomStart = 40.dp, bottomEnd = 40.dp)),
+                contentScale = ContentScale.Crop
+
+            )
+
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(20.dp),
+                horizontalArrangement = Arrangement.spacedBy(30.dp)
+            ) {
+
+                Row() {
+                    Icon(
+                        painter = painterResource(id = R.drawable.ic_date),
+                        contentDescription = null,
+                        tint = Color.DarkGray
+                    )
+
+                    Text(
+                        text = "5-7 days",
+                        color = Color.DarkGray,
+                        fontSize = 16.sp,
+                        modifier = Modifier.padding(start = 5.dp, top = 3.dp)
+                    )
+                }
+
+                Row() {
+                    Icon(
+                        painter = painterResource(id = R.drawable.ic_walk),
+                        contentDescription = null,
+                        tint = Color.DarkGray
+                    )
+
+                    Text(
+                        text = "20 km",
+                        color = Color.DarkGray,
+                        fontSize = 16.sp,
+                        modifier = Modifier.padding(start = 5.dp, top = 3.dp)
+                    )
+                }
+            }
+
+            Text(
+                text = "Glacier Hiking, Iceland",
+                modifier = Modifier.padding(start = 20.dp, end = 20.dp),
+                fontSize = 26.sp,
+                fontWeight = FontWeight.Bold
+            )
+
+            Text(
+                text = "Arctic Adventures offers glacier exploration of various length and difficulty",
+                modifier = Modifier.padding(start = 20.dp, end = 20.dp),
+                fontSize = 16.sp,
+                color = Color.Gray
+            )
+
+            Text(
+                text = "Traveler's Gallery",
+                modifier = Modifier.padding(top = 30.dp, start = 20.dp, end = 20.dp),
+                fontSize = 26.sp,
+                fontWeight = FontWeight.Bold
+            )
+
+            LazyVerticalStaggeredGrid(columns = StaggeredGridCells.Fixed(2),
+                modifier = Modifier.wrapContentSize().background(Color.White),
+                contentPadding = PaddingValues(20.dp),
+                horizontalArrangement = Arrangement.spacedBy(5.dp),
+                verticalArrangement = Arrangement.spacedBy(5.dp)
+                ){
+                items(10){
+                    galleryItem()
+                }
+            }
+        }
+    }
+}
+
+
+@Preview
+@Composable
+fun galleryItem(){
+
+    Box(modifier = Modifier
+        .fillMaxWidth()
+        .height(Random.nextInt(100, 200).dp)
+        .background(Color.White)
+        .clip(RoundedCornerShape(10.dp))){
+
+        Image(painter = painterResource(id = R.drawable.ic_intro),
+            contentDescription = null,
+            modifier = Modifier.fillMaxSize(),
+            contentScale = ContentScale.Crop)
+    }
+}

@@ -9,10 +9,16 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.layout.wrapContentWidth
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -24,8 +30,12 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -35,13 +45,16 @@ import androidx.compose.ui.unit.sp
 @Composable
 fun HomeCompose() {
 
+    val scrollState = rememberScrollState()
+
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color.White).padding(top = 30.dp)
+            .background(Color.White)
+            .padding(top = 30.dp, bottom = 30.dp)
     ) {
 
-        Column {
+        Column(modifier = Modifier.verticalScroll(scrollState, enabled = true)) {
 
             Row(
                 modifier = Modifier
@@ -78,8 +91,25 @@ fun HomeCompose() {
 
             }
 
+            val sentence = "Hello, What are you looking for?"
+            val colorWord = "Hello"
+
+            val annotatedString = buildAnnotatedString {
+                append(sentence)
+
+                // Add a span for the colored word
+                addStyle(
+                    style = SpanStyle(
+                        color = colorResource(R.color.base),
+                        fontWeight = FontWeight.Bold
+                    ),
+                    start = sentence.indexOf(colorWord),
+                    end = sentence.indexOf(colorWord) + colorWord.length
+                )
+            }
+
             Text(
-                text = "Hello, What are you looking for?",
+                text = annotatedString,
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(25.dp),
@@ -90,20 +120,24 @@ fun HomeCompose() {
                 color = Color.DarkGray
             )
 
-            Row(modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 30.dp),
-            horizontalArrangement = Arrangement.SpaceEvenly) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 30.dp),
+                horizontalArrangement = Arrangement.SpaceEvenly
+            ) {
 
-                Column(modifier = Modifier.wrapContentSize(),
-                horizontalAlignment = Alignment.CenterHorizontally) {
+                Column(
+                    modifier = Modifier.wrapContentSize(),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
 
                     IconButton(
                         onClick = {},
                         modifier = Modifier
                             .wrapContentSize()
                             .clip(RoundedCornerShape(percent = 20))
-                            .background(MaterialTheme.colorScheme.primary)
+                            .background(colorResource(id = R.color.base))
                             .padding(5.dp)
                     ) {
                         Icon(
@@ -127,19 +161,21 @@ fun HomeCompose() {
                     )
                 }
 
-                Column(modifier = Modifier.wrapContentSize(),
-                    horizontalAlignment = Alignment.CenterHorizontally) {
+                Column(
+                    modifier = Modifier.wrapContentSize(),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
 
                     IconButton(
                         onClick = {},
                         modifier = Modifier
                             .wrapContentSize()
                             .clip(RoundedCornerShape(percent = 20))
-                            .background(MaterialTheme.colorScheme.primary)
+                            .background(colorResource(id = R.color.base))
                             .padding(5.dp)
                     ) {
                         Icon(
-                            painter = painterResource(id = R.drawable.ic_home),
+                            painter = painterResource(id = R.drawable.ic_experience),
                             contentDescription = null,
                             tint = Color.White,
                             modifier = Modifier.size(20.dp)
@@ -159,19 +195,21 @@ fun HomeCompose() {
                     )
                 }
 
-                Column(modifier = Modifier.wrapContentSize(),
-                    horizontalAlignment = Alignment.CenterHorizontally) {
+                Column(
+                    modifier = Modifier.wrapContentSize(),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
 
                     IconButton(
                         onClick = {},
                         modifier = Modifier
                             .wrapContentSize()
                             .clip(RoundedCornerShape(percent = 20))
-                            .background(MaterialTheme.colorScheme.primary)
+                            .background(colorResource(id = R.color.base))
                             .padding(5.dp)
                     ) {
                         Icon(
-                            painter = painterResource(id = R.drawable.ic_home),
+                            painter = painterResource(id = R.drawable.ic_adventure),
                             contentDescription = null,
                             tint = Color.White,
                             modifier = Modifier.size(20.dp)
@@ -191,19 +229,21 @@ fun HomeCompose() {
                     )
                 }
 
-                Column(modifier = Modifier.wrapContentSize(),
-                    horizontalAlignment = Alignment.CenterHorizontally) {
+                Column(
+                    modifier = Modifier.wrapContentSize(),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
 
                     IconButton(
                         onClick = {},
                         modifier = Modifier
                             .wrapContentSize()
                             .clip(RoundedCornerShape(percent = 20))
-                            .background(MaterialTheme.colorScheme.primary)
+                            .background(colorResource(id = R.color.base))
                             .padding(5.dp)
                     ) {
                         Icon(
-                            painter = painterResource(id = R.drawable.ic_home),
+                            painter = painterResource(id = R.drawable.ic_flight),
                             contentDescription = null,
                             tint = Color.White,
                             modifier = Modifier.size(20.dp)
@@ -246,12 +286,92 @@ fun HomeCompose() {
                 Image(
                     painter = painterResource(id = R.drawable.ic_options),
                     contentDescription = null,
-                    modifier = Modifier.padding(20.dp)
+                    modifier = Modifier
+                        .padding(20.dp)
                         .size(40.dp)
                 )
 
             }
+
+            LazyRow(content = {
+                items(5){
+                    ExperienceItem()
+                }
+            }, modifier = Modifier.padding(start = 10.dp))
         }
     }
 
+}
+
+@Preview
+@Composable
+fun ExperienceItem() {
+
+    Box(
+        modifier = Modifier
+            .width(280.dp)
+            .height(400.dp)
+            .background(Color.White)
+    ) {
+
+        Image(
+            painter = painterResource(id = R.drawable.ic_intro),
+            contentDescription = null,
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(10.dp)
+                .clip(RoundedCornerShape(30.dp)),
+            contentScale = ContentScale.Crop
+        )
+
+        Box(modifier = Modifier.fillMaxSize()) {
+
+            Box(modifier = Modifier
+                .fillMaxWidth()
+                .height(150.dp)
+                .align(Alignment.BottomStart)) {
+
+                Column(modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(25.dp)) {
+
+                    Text(text = "The Golden Circle, Iceland",
+                    color = Color.White,
+                    fontSize = 24.sp,
+                    fontWeight = FontWeight.Bold
+                    )
+
+                    Row(modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 10.dp),
+                    horizontalArrangement = Arrangement.spacedBy(30.dp)) {
+
+                        Row() {
+                            Icon(painter = painterResource(id = R.drawable.ic_date),
+                                contentDescription = null,
+                            tint = Color.White)
+
+                            Text(text = "5-7 days",
+                                color = Color.White,
+                                fontSize = 16.sp,
+                                modifier = Modifier.padding(start = 5.dp, top = 3.dp)
+                            )
+                        }
+
+                        Row() {
+                            Icon(painter = painterResource(id = R.drawable.ic_walk),
+                                contentDescription = null,
+                                tint = Color.White)
+
+                            Text(text = "20 km",
+                                color = Color.White,
+                                fontSize = 16.sp,
+                                modifier = Modifier.padding(start = 5.dp, top = 3.dp)
+                            )
+                        }
+                    }
+                }
+            }
+        }
+    }
 }
