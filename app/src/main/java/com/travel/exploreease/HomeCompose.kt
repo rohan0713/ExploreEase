@@ -2,11 +2,11 @@ package com.travel.exploreease
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -14,7 +14,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
-import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -32,7 +31,6 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.buildAnnotatedString
@@ -40,10 +38,10 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
 
-@Preview(showBackground = false)
 @Composable
-fun HomeCompose() {
+fun HomeCompose(navController: NavHostController) {
 
     val scrollState = rememberScrollState()
 
@@ -295,7 +293,9 @@ fun HomeCompose() {
 
             LazyRow(content = {
                 items(5){
-                    ExperienceItem()
+                    ExperienceItem(){
+                        navController.navigate("details")
+                    }
                 }
             }, modifier = Modifier.padding(start = 10.dp))
         }
@@ -303,15 +303,17 @@ fun HomeCompose() {
 
 }
 
-@Preview
 @Composable
-fun ExperienceItem() {
+fun ExperienceItem(onClick : () -> Unit) {
 
     Box(
         modifier = Modifier
             .width(280.dp)
             .height(400.dp)
             .background(Color.White)
+            .clickable {
+                onClick()
+            }
     ) {
 
         Image(

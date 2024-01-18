@@ -23,6 +23,10 @@ fun AppNavigation(){
         }
 
         composable("home"){
+            HomeCompose(navController)
+        }
+
+        composable("details"){
             DetailsCompose()
         }
     }
