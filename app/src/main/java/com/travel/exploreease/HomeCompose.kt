@@ -11,21 +11,28 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.outlined.DateRange
 import androidx.compose.material.icons.outlined.Home
+import androidx.compose.material.icons.outlined.LocationOn
 import androidx.compose.material.icons.outlined.Person
 import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material3.DrawerValue
@@ -163,8 +170,9 @@ fun HomeCompose(navController: NavHostController) {
                             .graphicsLayer(
                                 clip = true,
                                 shape = MaterialTheme.shapes.extraLarge
-                            ).clickable {
-                                        navController.navigate("profile")
+                            )
+                            .clickable {
+                                navController.navigate("profile")
                             },
                         contentScale = ContentScale.Crop,
                     )
@@ -229,7 +237,7 @@ fun HomeCompose(navController: NavHostController) {
                         }
 
                         Text(
-                            text = "Hotels",
+                            text = "Cafes",
                             modifier = Modifier
                                 .wrapContentSize()
                                 .padding(top = 10.dp),
@@ -297,7 +305,7 @@ fun HomeCompose(navController: NavHostController) {
                         }
 
                         Text(
-                            text = "Adventures",
+                            text = "Restaurants",
                             modifier = Modifier
                                 .wrapContentSize()
                                 .padding(top = 10.dp),
@@ -331,7 +339,7 @@ fun HomeCompose(navController: NavHostController) {
                         }
 
                         Text(
-                            text = "Flights",
+                            text = "Events",
                             modifier = Modifier
                                 .wrapContentSize()
                                 .padding(top = 10.dp),
@@ -371,6 +379,71 @@ fun HomeCompose(navController: NavHostController) {
                             .size(40.dp)
                     )
 
+                }
+
+                LazyRow(content = {
+                    items(5) {
+                        ExperienceItem() {
+                            navController.navigate("details")
+                        }
+                    }
+                }, modifier = Modifier.padding(start = 10.dp))
+
+                Row(modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 20.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween) {
+                    Text(
+                        text = "Popular Cafes",
+                        modifier = Modifier
+                            .wrapContentSize()
+                            .padding(25.dp),
+                        style = TextStyle(
+                            fontSize = 28.sp,
+                            fontWeight = FontWeight.Bold,
+                        ),
+                        color = Color.DarkGray
+                    )
+
+                    Image(
+                        painter = painterResource(id = R.drawable.ic_options),
+                        contentDescription = null,
+                        modifier = Modifier
+                            .padding(20.dp)
+                            .size(40.dp)
+                    )
+                }
+
+               LazyVerticalGrid(columns = GridCells.Fixed(2), content = {
+                   items(7){
+                       CafeItem()
+                   }
+               }, modifier = Modifier.fillMaxWidth().heightIn(max = 1000.dp).padding(horizontal = 20.dp),
+                   horizontalArrangement = Arrangement.spacedBy(20.dp))
+
+                Row(modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 20.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween) {
+                    Text(
+                        text = "Trending Events",
+                        modifier = Modifier
+                            .wrapContentSize()
+                            .padding(25.dp),
+                        style = TextStyle(
+                            fontSize = 28.sp,
+                            fontWeight = FontWeight.Bold,
+                        ),
+                        color = Color.DarkGray
+                    )
+
+                    Image(
+                        painter = painterResource(id = R.drawable.ic_options),
+                        contentDescription = null,
+                        modifier = Modifier
+                            .padding(20.dp)
+                            .size(40.dp)
+                    )
                 }
 
                 LazyRow(content = {
@@ -471,4 +544,50 @@ fun ExperienceItem(onClick: () -> Unit) {
             }
         }
     }
+}
+
+@Preview
+@Composable
+fun CafeItem(){
+
+    Box(modifier = Modifier
+        .fillMaxWidth()
+        .wrapContentSize()
+        .background(Color.White)) {
+
+        Column {
+            Image(painter = painterResource(id = R.drawable.ic_intro),
+                contentDescription = null,
+                modifier = Modifier
+                    .height(200.dp)
+                    .padding(bottom = 10.dp)
+                    .clip(RoundedCornerShape(20.dp)),
+                contentScale = ContentScale.Crop)
+
+            Text(text = "Lake Como", modifier = Modifier.padding(horizontal = 5.dp),
+                color = Color.Black,
+                style = TextStyle(
+                    fontWeight = FontWeight.ExtraBold,
+                    fontSize = 20.sp,
+                )
+            )
+
+            Row(modifier = Modifier
+                .fillMaxWidth()
+                .padding(bottom = 20.dp)) {
+                Icon(imageVector = Icons.Outlined.LocationOn, contentDescription = null,
+                    tint = Color.Gray)
+                Text(text = "Patel Nagar", modifier = Modifier.padding(horizontal = 5.dp),
+                    color = Color.Gray,
+                    style = TextStyle(
+                        fontSize = 15.sp,
+                        fontWeight = FontWeight.Bold
+                    )
+                )
+            }
+        }
+
+
+    }
+
 }

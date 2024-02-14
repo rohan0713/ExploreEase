@@ -130,6 +130,7 @@ fun DetailsCompose() {
                         .background(Color.White).padding(bottom = 100.dp),
                     contentPadding = PaddingValues(20.dp),
                     horizontalArrangement = Arrangement.spacedBy(5.dp),
+                    verticalItemSpacing = 5.dp
                 ) {
                     items(7) {
                         galleryItem()
