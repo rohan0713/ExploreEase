@@ -1,4 +1,4 @@
-package com.travel.exploreease
+package com.travel.exploreease.navigation
 
 import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.animation.core.EaseIn
@@ -8,10 +8,14 @@ import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.runtime.Composable
-import androidx.navigation.NavOptions
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.travel.exploreease.ui.composables.DetailsCompose
+import com.travel.exploreease.ui.composables.HomeCompose
+import com.travel.exploreease.ui.composables.IntroCompose
+import com.travel.exploreease.ui.composables.ProfileCompose
+import com.travel.exploreease.ui.composables.SplashScreen
 
 @Composable
 fun AppNavigation() {

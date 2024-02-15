@@ -1,4 +1,4 @@
-package com.travel.exploreease
+package com.travel.exploreease.utils
 
 import androidx.compose.ui.graphics.vector.ImageVector
 
