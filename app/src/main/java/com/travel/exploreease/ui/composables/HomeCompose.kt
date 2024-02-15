@@ -19,6 +19,7 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -72,6 +73,7 @@ import com.travel.exploreease.utils.DrawerItem
 import com.travel.exploreease.R
 import com.travel.exploreease.data.remote.RetrofitClient
 import com.travel.exploreease.data.models.Data
+import com.travel.exploreease.data.models.Experience
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
@@ -86,6 +88,12 @@ fun HomeCompose(navController: NavHostController) {
     var list by remember {
         mutableStateOf<List<Data>>(emptyList())
     }
+
+    val expScope = rememberCoroutineScope()
+    var expList by remember {
+        mutableStateOf<List<Experience>>(emptyList())
+    }
+
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
 
     val items = mutableListOf<DrawerItem>()
@@ -392,9 +400,15 @@ fun HomeCompose(navController: NavHostController) {
 
                 }
 
+                LaunchedEffect(null){
+                    expScope.launch(Dispatchers.IO) {
+                        expList = getExperiences()
+                    }
+                }
+
                 LazyRow(content = {
-                    items(5) {
-                        ExperienceItem() {
+                    items(expList) {item ->
+                        ExperienceItem(item.poster, item.title, item.category, item.location, item.duration) {
                             navController.navigate("details")
                         }
                     }
@@ -435,7 +449,9 @@ fun HomeCompose(navController: NavHostController) {
                 LazyVerticalGrid(
                     columns = GridCells.Fixed(2), content = {
                         items(list) {item ->
-                            CafeItem(item.poster, item.title, item.location)
+                            CafeItem(item.poster, item.title, item.location) {
+                                navController.navigate("details")
+                            }
                         }
                     }, modifier = Modifier
                         .fillMaxWidth()
@@ -486,47 +502,54 @@ fun HomeCompose(navController: NavHostController) {
 }
 
 @Composable
-fun ExperienceItem(onClick: () -> Unit) {
+fun ExperienceItem(
+    poster: String,
+    title: String,
+    category: String,
+    location: String,
+    duration: String,
+    function: () -> Unit
+) {
 
     Box(
         modifier = Modifier
-            .width(280.dp)
-            .height(400.dp)
+            .width(250.dp)
             .background(Color.White)
             .clickable {
-                onClick()
+                function()
             }
     ) {
 
-        Image(
-            painter = painterResource(id = R.drawable.ic_intro),
-            contentDescription = null,
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(10.dp)
-                .clip(RoundedCornerShape(30.dp)),
-            contentScale = ContentScale.Crop
-        )
+        val url = rememberImagePainter(data = poster)
 
-        Box(modifier = Modifier.fillMaxSize()) {
+        Column(modifier = Modifier.fillMaxSize()) {
+
+            Image(
+                painter = url,
+                contentDescription = null,
+                modifier = Modifier
+                    .fillMaxSize()
+                    .height(350.dp)
+                    .padding(10.dp)
+                    .clip(RoundedCornerShape(30.dp)),
+                contentScale = ContentScale.Crop
+            )
 
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(150.dp)
-                    .align(Alignment.BottomStart)
             ) {
 
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(25.dp)
+                        .padding(horizontal = 10.dp)
                 ) {
 
                     Text(
-                        text = "The Golden Circle, Iceland",
-                        color = Color.White,
-                        fontSize = 24.sp,
+                        text = "$title,\n$location",
+                        color = Color.Black,
+                        fontSize = 18.sp,
                         fontWeight = FontWeight.Bold
                     )
 
@@ -541,13 +564,13 @@ fun ExperienceItem(onClick: () -> Unit) {
                             Icon(
                                 painter = painterResource(id = R.drawable.ic_date),
                                 contentDescription = null,
-                                tint = Color.White
+                                tint = Color.Black
                             )
 
                             Text(
-                                text = "5-7 days",
-                                color = Color.White,
-                                fontSize = 16.sp,
+                                text = duration,
+                                color = Color.Black,
+                                fontSize = 14.sp,
                                 modifier = Modifier.padding(start = 5.dp, top = 3.dp)
                             )
                         }
@@ -556,13 +579,13 @@ fun ExperienceItem(onClick: () -> Unit) {
                             Icon(
                                 painter = painterResource(id = R.drawable.ic_walk),
                                 contentDescription = null,
-                                tint = Color.White
+                                tint = Color.Black
                             )
 
                             Text(
-                                text = "20 km",
-                                color = Color.White,
-                                fontSize = 16.sp,
+                                text = category,
+                                color = Color.Black,
+                                fontSize = 14.sp,
                                 modifier = Modifier.padding(start = 5.dp, top = 3.dp)
                             )
                         }
@@ -570,11 +593,12 @@ fun ExperienceItem(onClick: () -> Unit) {
                 }
             }
         }
+
     }
 }
 
 @Composable
-fun CafeItem(poster: String, title: String, location: String) {
+fun CafeItem(poster: String, title: String, location: String, function: () -> Unit) {
 
     val url = rememberImagePainter(data = poster)
     Box(
@@ -582,6 +606,9 @@ fun CafeItem(poster: String, title: String, location: String) {
             .fillMaxWidth()
             .wrapContentSize()
             .background(Color.White)
+            .clickable {
+                function()
+            }
     ) {
 
         Column {
@@ -699,6 +726,19 @@ suspend fun getCafes(): List<Data> {
     if (response.isSuccessful) {
         val list = response.body()?.let {
             it.cafes
+        }!!
+        return list
+    }
+
+    return emptyList()
+}
+
+suspend fun getExperiences(): List<Experience> {
+
+    val response = RetrofitClient.api.getExperiences()
+    if(response.isSuccessful){
+        val list = response.body()?.let {
+            it.experiences
         }!!
         return list
     }
