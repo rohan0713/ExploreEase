@@ -47,6 +47,7 @@ import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -74,25 +75,29 @@ import com.travel.exploreease.R
 import com.travel.exploreease.data.remote.RetrofitClient
 import com.travel.exploreease.data.models.Data
 import com.travel.exploreease.data.models.Experience
+import com.travel.exploreease.ui.viewmodels.MainViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeCompose(navController: NavHostController) {
+fun HomeCompose(viewModel: MainViewModel, navController: NavHostController) {
+
+    val cafeslist by viewModel.cafes.observeAsState()
+    val expList by viewModel.experiences.observeAsState()
 
     val scrollState = rememberScrollState()
     val scope = rememberCoroutineScope()
 
-    val apiScope = rememberCoroutineScope()
-    var list by remember {
-        mutableStateOf<List<Data>>(emptyList())
-    }
+//    val apiScope = rememberCoroutineScope()
+//    var list by remember {
+//        mutableStateOf<List<Data>>(emptyList())
+//    }
 
     val expScope = rememberCoroutineScope()
-    var expList by remember {
-        mutableStateOf<List<Experience>>(emptyList())
-    }
+//    var expList by remember {
+//        mutableStateOf<List<Experience>>(emptyList())
+//    }
 
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
 
@@ -400,16 +405,12 @@ fun HomeCompose(navController: NavHostController) {
 
                 }
 
-                LaunchedEffect(null){
-                    expScope.launch(Dispatchers.IO) {
-                        expList = getExperiences()
-                    }
-                }
-
                 LazyRow(content = {
-                    items(expList) {item ->
-                        ExperienceItem(item.poster, item.title, item.category, item.location, item.duration) {
-                            navController.navigate("details")
+                    expList?.let {
+                        items(it.experiences) { item ->
+                            ExperienceItem(item.poster, item.title, item.category, item.location, item.duration) {
+                                navController.navigate("details")
+                            }
                         }
                     }
                 }, modifier = Modifier.padding(start = 10.dp))
@@ -440,17 +441,14 @@ fun HomeCompose(navController: NavHostController) {
                             .size(40.dp)
                     )
                 }
-                LaunchedEffect(null) {
-                    apiScope.launch(Dispatchers.IO) {
-                        list = getCafes()
-                    }
-                }
 
                 LazyVerticalGrid(
                     columns = GridCells.Fixed(2), content = {
-                        items(list) {item ->
-                            CafeItem(item.poster, item.title, item.location) {
-                                navController.navigate("details")
+                        cafeslist?.let {
+                            items(it.cafes) { item ->
+                                CafeItem(item.poster, item.title, item.location) {
+                                    navController.navigate("details")
+                                }
                             }
                         }
                     }, modifier = Modifier

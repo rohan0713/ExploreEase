@@ -16,9 +16,10 @@ import com.travel.exploreease.ui.composables.HomeCompose
 import com.travel.exploreease.ui.composables.IntroCompose
 import com.travel.exploreease.ui.composables.ProfileCompose
 import com.travel.exploreease.ui.composables.SplashScreen
+import com.travel.exploreease.ui.viewmodels.MainViewModel
 
 @Composable
-fun AppNavigation() {
+fun AppNavigation(viewModel: MainViewModel) {
 
     val navController = rememberNavController()
 
@@ -68,7 +69,7 @@ fun AppNavigation() {
         }
 
         composable("home") {
-            HomeCompose(navController)
+            HomeCompose(viewModel, navController)
         }
 
         composable("details") {
